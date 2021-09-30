@@ -2,6 +2,9 @@ defmodule Fumo.Accounts.UserToken do
   use Ecto.Schema
   import Ecto.Query
 
+  alias Fumo.Profiles.UserProfile
+  alias Fumo.Accounts.User
+
   @hash_algorithm :sha256
   @rand_size 32
 
@@ -37,11 +40,20 @@ defmodule Fumo.Accounts.UserToken do
   The query returns the user found by the token.
   """
   def verify_session_token_query(token) do
-    query =
+
+     token_query =
       from token in token_and_context_query(token, "session"),
         join: user in assoc(token, :user),
         where: token.inserted_at > ago(@session_validity_in_days, "day"),
-        select: user
+        select: user.id
+     query = from user in User,
+      join: u in subquery(token_query),
+      on: u.id == user.id,
+      join: p in UserProfile,
+      on: user.id == p.user_id,
+      preload: [:profile],
+      select: %{user | username: p.username}
+
 
     {:ok, query}
   end

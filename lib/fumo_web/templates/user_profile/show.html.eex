@@ -1,0 +1,11 @@
+<div class="well">
+
+<h1 class="header"><%= @user_profile.username %></h1>
+
+<p class="text-lg"><%= @user_profile.bio %></p>
+  
+
+<%= if @current_user && @current_user.id == @user_profile.user_id do %>
+<%= link "Settings", to: Routes.user_settings_path(@conn, :edit), class: "btn w-48" %>
+<% end %>
+</div>

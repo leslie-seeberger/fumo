@@ -8,7 +8,7 @@
     </div>
   <% end %>
 <div>
-  <%= label f, :password, "New password", class="sr-only" %>
+  <%= label f, :password, "New password", class: "sr-only" %>
   <%= password_input f, :password, required: true, placeholder: "New Password" %>
   <%= error_tag f, :password %>
 </div>
@@ -22,8 +22,5 @@
   </div>
 <% end %>
 
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %>
-</p>
+<%= render FumoWeb.SharedView, "_registration_links.html", conn: @conn %>
 </div>

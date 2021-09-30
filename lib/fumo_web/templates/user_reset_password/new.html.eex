@@ -9,8 +9,6 @@
   </div>
 <% end %>
 
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %>
-</p>
+<%= render FumoWeb.SharedView, "_registration_links.html", conn: @conn %>
+
 </div>

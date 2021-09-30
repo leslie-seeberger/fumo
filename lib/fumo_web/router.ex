@@ -20,6 +20,8 @@ defmodule FumoWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    get "/profiles/:username", UserProfileController, :show
   end
 
   # Other scopes may use custom stacks.
@@ -48,8 +50,8 @@ defmodule FumoWeb.Router do
   scope "/", FumoWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
-    get "/users/register", UserRegistrationController, :new
-    post "/users/register", UserRegistrationController, :create
+    get "/users/register", RegistrationController, :new
+    post "/users/register", RegistrationController, :create
     get "/users/log_in", UserSessionController, :new
     post "/users/log_in", UserSessionController, :create
     get "/users/reset_password", UserResetPasswordController, :new

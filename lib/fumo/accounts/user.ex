@@ -8,7 +8,9 @@ defmodule Fumo.Accounts.User do
     field :password, :string, virtual: true
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
+    field :username, :string, virtual: true
 
+    has_one :profile, Fumo.Profiles.UserProfile
     timestamps()
   end
 

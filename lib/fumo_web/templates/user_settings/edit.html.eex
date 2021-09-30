@@ -9,3 +9,7 @@
 <div class="form-container">
   <%= render "_update_password.html", changeset: @password_changeset, conn: @conn %>
 </div>
+
+<div class="form-container">
+  <%= render "_update_profile.html", changeset: @profile_changeset, conn: @conn  %>
+  </div>

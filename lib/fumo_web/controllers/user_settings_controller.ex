@@ -3,6 +3,7 @@ defmodule FumoWeb.UserSettingsController do
 
   alias Fumo.Accounts
   alias FumoWeb.UserAuth
+  alias Fumo.Profiles
 
   plug :assign_email_and_password_changesets
 
@@ -50,6 +51,18 @@ defmodule FumoWeb.UserSettingsController do
     end
   end
 
+  def update(conn, %{"action" => "update_profile", "user_profile" => user_profile}) do
+    user = conn.assigns.current_user
+    case Profiles.update_user_profile(user, user_profile) do
+      {:ok, _} ->
+        conn
+        |> put_flash(:info, "Profile updated successfully.")
+        |> redirect(to: Routes.user_settings_path(conn, :edit))
+      {:error, changeset} ->
+        render(conn, "edit.html", profile_changeset: changeset)
+    end
+  end
+
   def confirm_email(conn, %{"token" => token}) do
     case Accounts.update_user_email(conn.assigns.current_user, token) do
       :ok ->
@@ -70,5 +83,6 @@ defmodule FumoWeb.UserSettingsController do
     conn
     |> assign(:email_changeset, Accounts.change_user_email(user))
     |> assign(:password_changeset, Accounts.change_user_password(user))
+    |> assign(:profile_changeset, Profiles.change_user_profile_by_user(user))
   end
 end

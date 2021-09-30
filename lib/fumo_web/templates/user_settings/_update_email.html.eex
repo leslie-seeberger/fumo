@@ -10,7 +10,7 @@
   <%= hidden_input f, :action, name: "action", value: "update_email" %>
 <div>
   <%= label f, :email, class: "sr-only" %>
-  <%= email_input f, :email, required: true, placeholder: "Emaiol" %>
+  <%= email_input f, :email, required: true, placeholder: "Email" %>
   <%= error_tag f, :email %>
 </div>
 <div>

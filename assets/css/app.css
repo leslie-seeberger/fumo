@@ -10,10 +10,14 @@ body {
   @apply text-gray;
 }
 
+hr {
+  @apply bg-lighter w-1/2 text-lighter;
+}
+
 .header {
   @apply text-primary text-4xl font-bold;
 }
 
-hr {
-  @apply bg-lighter w-1/2 text-lighter;
+.well {
+  @apply mx-auto mt-4 bg-light w-1/2 p-8 rounded-3xl flex flex-col gap-4;
 }
