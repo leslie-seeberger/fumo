@@ -13,4 +13,8 @@ import "../css/app.css";
 //     import socket from "./socket"
 //
 import "phoenix_html";
-import "alpinejs";
+import Alpine from "alpinejs";
+
+window.Alpine = Alpine;
+
+Alpine.start();

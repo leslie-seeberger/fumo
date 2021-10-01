@@ -1,12 +1,10 @@
- <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
-            <% end %>
-          </ul>
-          <%= render "_user_menu.html", assigns %>
-        </nav>
-      </section>
-    </header>
+ <header class="w-full bg-white z-50 relative">
+  <section class="mx-12 border-b border-light flex justify-between h-16">
+    <%= link to: "/" do %>
+      <img src="<%= Routes.static_path(@conn, "/images/fumo_logo.png")%>" alt="Fumo" class="h-full p-2" />
+    <% end %>
+    <nav role="navigation" class="" >
+      <%= render "_user_menu.html", assigns %>
+    </nav>
+  </section>
+</header>

@@ -5,13 +5,14 @@
 @import "tailwindcss/utilities";
 
 @import "./forms.css";
+@import "./buttons.css";
 
 body {
   @apply text-gray;
 }
 
 hr {
-  @apply bg-lighter w-1/2 text-lighter;
+  @apply bg-light w-1/2 text-light;
 }
 
 .header {

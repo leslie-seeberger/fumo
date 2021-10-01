@@ -11,10 +11,11 @@ module.exports = {
       secondary: "#FC5868",
       primary: "#14134F",
       accent: "#FFB47C",
-      light: "#EDF2FE",
-      lighter: "#CFDCFB",
+      light: "#CFDCFB",
+      lighter: "#EDF2FE",
       gray: "#52555B",
       white: "#FFFFFF",
+      current: "currentColor",
     },
     fontFamily: {
       sans: ["Red Hat Display", "sans-serif"],
@@ -23,5 +24,5 @@ module.exports = {
     extend: {},
   },
   variants: {},
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require("@tailwindcss/forms"), require("tailwind-hamburgers")],
 };
