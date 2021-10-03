@@ -1,0 +1,16 @@
+<section class="flex justify-items-stretch items-center w-full mt-4">
+    <article class="w-1/2 text-center  flex flex-col items-center">
+        <h1 class="text-primary-light font-bold text-5xl">Fumo</h1>
+        <p class="my-4 w-1/2">Create flashcard decks to teach something new. 
+        Subscribe to decks and strengthen your knowledge.</p>
+        <%= link to: Routes.registration_path(@conn, :new), class: "btn flex w-64" do%>
+            <span class="mr-4">Get Started</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+        <% end %>
+    </article>
+    <aside class="w-1/2">
+        <img src="<%= Routes.static_path(@conn, "/images/hero.svg")%>" />
+    </aside>
+</section>

@@ -9,7 +9,10 @@ module.exports = {
   theme: {
     colors: {
       secondary: "#FC5868",
-      primary: "#14134F",
+      primary: {
+        DEFAULT: "#14134F",
+        light: "#2E2CB5",
+      },
       accent: "#FFB47C",
       light: "#CFDCFB",
       lighter: "#EDF2FE",
