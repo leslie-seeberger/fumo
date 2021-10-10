@@ -47,6 +47,7 @@ defmodule Fumo.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:phx_gen_auth, "~> 0.7", only: [:dev], runtime: false},
+      {:faker, "~> 0.16.0", only: [:dev, :test]}
     ]
   end
 

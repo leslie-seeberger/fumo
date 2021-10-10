@@ -1,6 +1,9 @@
 defmodule Fumo.Profiles.UserProfile do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Fumo.Validations
+
+  @derive {Phoenix.Param, key: :username}
 
   schema "user_profiles" do
     field :bio, :string
@@ -21,11 +24,9 @@ defmodule Fumo.Profiles.UserProfile do
 
   defp validate_username(changeset) do
     changeset
-    |> update_change(:username, &String.downcase/1)
-    |> validate_format(:username, ~r/^[a-z0-9_]+$/)
-    |> validate_length(:username, min: 3, max: 20)
     |> unsafe_validate_unique(:username, Fumo.Repo)
     |> unique_constraint(:username)
+    |> Validations.validate_username()
   end
 
   defp validate_bio(changeset) do

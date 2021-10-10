@@ -3,17 +3,18 @@ defmodule FumoWeb.UserConfirmationControllerTest do
 
   alias Fumo.Accounts
   alias Fumo.Repo
+  import Fumo.RegistrationFixtures
   import Fumo.AccountsFixtures
 
   setup do
-    %{user: user_fixture()}
+    registration_fixture()
   end
 
   describe "GET /users/confirm" do
     test "renders the confirmation page", %{conn: conn} do
       conn = get(conn, Routes.user_confirmation_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Resend confirmation instructions</h1>"
+      assert response =~ "Resend confirmation instructions"
     end
   end
 

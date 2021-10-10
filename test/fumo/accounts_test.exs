@@ -3,7 +3,10 @@ defmodule Fumo.AccountsTest do
 
   alias Fumo.Accounts
   import Fumo.AccountsFixtures
+  import Fumo.RegistrationFixtures
   alias Fumo.Accounts.{User, UserToken}
+
+  require IEx
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
@@ -11,7 +14,7 @@ defmodule Fumo.AccountsTest do
     end
 
     test "returns the user if the email exists" do
-      %{id: id} = user = user_fixture()
+       %{user: %{id: id} = user}= registration_fixture()
       assert %User{id: ^id} = Accounts.get_user_by_email(user.email)
     end
   end
@@ -22,12 +25,12 @@ defmodule Fumo.AccountsTest do
     end
 
     test "does not return the user if the password is not valid" do
-      user = user_fixture()
+      %{user: user} = registration_fixture()
       refute Accounts.get_user_by_email_and_password(user.email, "invalid")
     end
 
     test "returns the user if the email and password are valid" do
-      %{id: id} = user = user_fixture()
+       %{user: %{id: id} = user} = registration_fixture()
 
       assert %User{id: ^id} =
                Accounts.get_user_by_email_and_password(user.email, valid_user_password())
@@ -42,77 +45,8 @@ defmodule Fumo.AccountsTest do
     end
 
     test "returns the user with the given id" do
-      %{id: id} = user = user_fixture()
+      %{user: %{id: id} = user} = registration_fixture()
       assert %User{id: ^id} = Accounts.get_user!(user.id)
-    end
-  end
-
-  describe "register_user/1" do
-    test "requires email and password to be set" do
-      {:error, changeset} = Accounts.register_user(%{})
-
-      assert %{
-               password: ["can't be blank"],
-               email: ["can't be blank"]
-             } = errors_on(changeset)
-    end
-
-    test "validates email and password when given" do
-      {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "not valid"})
-
-      assert %{
-               email: ["must have the @ sign and no spaces"],
-               password: ["should be at least 12 character(s)"]
-             } = errors_on(changeset)
-    end
-
-    test "validates maximum values for email and password for security" do
-      too_long = String.duplicate("db", 100)
-      {:error, changeset} = Accounts.register_user(%{email: too_long, password: too_long})
-      assert "should be at most 160 character(s)" in errors_on(changeset).email
-      assert "should be at most 80 character(s)" in errors_on(changeset).password
-    end
-
-    test "validates email uniqueness" do
-      %{email: email} = user_fixture()
-      {:error, changeset} = Accounts.register_user(%{email: email})
-      assert "has already been taken" in errors_on(changeset).email
-
-      # Now try with the upper cased email too, to check that email case is ignored.
-      {:error, changeset} = Accounts.register_user(%{email: String.upcase(email)})
-      assert "has already been taken" in errors_on(changeset).email
-    end
-
-    test "registers users with a hashed password" do
-      email = unique_user_email()
-      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
-      assert user.email == email
-      assert is_binary(user.hashed_password)
-      assert is_nil(user.confirmed_at)
-      assert is_nil(user.password)
-    end
-  end
-
-  describe "change_user_registration/2" do
-    test "returns a changeset" do
-      assert %Ecto.Changeset{} = changeset = Accounts.change_user_registration(%User{})
-      assert changeset.required == [:password, :email]
-    end
-
-    test "allows fields to be set" do
-      email = unique_user_email()
-      password = valid_user_password()
-
-      changeset =
-        Accounts.change_user_registration(
-          %User{},
-          valid_user_attributes(email: email, password: password)
-        )
-
-      assert changeset.valid?
-      assert get_change(changeset, :email) == email
-      assert get_change(changeset, :password) == password
-      assert is_nil(get_change(changeset, :hashed_password))
     end
   end
 
@@ -125,7 +59,7 @@ defmodule Fumo.AccountsTest do
 
   describe "apply_user_email/3" do
     setup do
-      %{user: user_fixture()}
+      registration_fixture()
     end
 
     test "requires email to change", %{user: user} do
@@ -150,11 +84,9 @@ defmodule Fumo.AccountsTest do
     end
 
     test "validates email uniqueness", %{user: user} do
-      %{email: email} = user_fixture()
-
+      %{user: %{email: email}} = registration_fixture()
       {:error, changeset} =
         Accounts.apply_user_email(user, valid_user_password(), %{email: email})
-
       assert "has already been taken" in errors_on(changeset).email
     end
 
@@ -175,7 +107,7 @@ defmodule Fumo.AccountsTest do
 
   describe "deliver_update_email_instructions/3" do
     setup do
-      %{user: user_fixture()}
+       registration_fixture()
     end
 
     test "sends token through notification", %{user: user} do
@@ -194,7 +126,7 @@ defmodule Fumo.AccountsTest do
 
   describe "update_user_email/2" do
     setup do
-      user = user_fixture()
+      %{user: user} = registration_fixture()
       email = unique_user_email()
 
       token =
@@ -255,7 +187,7 @@ defmodule Fumo.AccountsTest do
 
   describe "update_user_password/3" do
     setup do
-      %{user: user_fixture()}
+      registration_fixture()
     end
 
     test "validates password", %{user: user} do
@@ -311,7 +243,7 @@ defmodule Fumo.AccountsTest do
 
   describe "generate_user_session_token/1" do
     setup do
-      %{user: user_fixture()}
+     registration_fixture()
     end
 
     test "generates a token", %{user: user} do
@@ -323,7 +255,7 @@ defmodule Fumo.AccountsTest do
       assert_raise Ecto.ConstraintError, fn ->
         Repo.insert!(%UserToken{
           token: user_token.token,
-          user_id: user_fixture().id,
+          user_id: registration_fixture().user.id,
           context: "session"
         })
       end
@@ -332,7 +264,7 @@ defmodule Fumo.AccountsTest do
 
   describe "get_user_by_session_token/1" do
     setup do
-      user = user_fixture()
+      %{user: user} = registration_fixture()
       token = Accounts.generate_user_session_token(user)
       %{user: user, token: token}
     end
@@ -354,7 +286,7 @@ defmodule Fumo.AccountsTest do
 
   describe "delete_session_token/1" do
     test "deletes the token" do
-      user = user_fixture()
+      %{user: user} = registration_fixture()
       token = Accounts.generate_user_session_token(user)
       assert Accounts.delete_session_token(token) == :ok
       refute Accounts.get_user_by_session_token(token)
@@ -363,7 +295,7 @@ defmodule Fumo.AccountsTest do
 
   describe "deliver_user_confirmation_instructions/2" do
     setup do
-      %{user: user_fixture()}
+      registration_fixture()
     end
 
     test "sends token through notification", %{user: user} do
@@ -382,7 +314,7 @@ defmodule Fumo.AccountsTest do
 
   describe "confirm_user/1" do
     setup do
-      user = user_fixture()
+      %{user: user} = registration_fixture()
 
       token =
         extract_user_token(fn url ->
@@ -416,7 +348,7 @@ defmodule Fumo.AccountsTest do
 
   describe "deliver_user_reset_password_instructions/2" do
     setup do
-      %{user: user_fixture()}
+      registration_fixture()
     end
 
     test "sends token through notification", %{user: user} do
@@ -435,7 +367,7 @@ defmodule Fumo.AccountsTest do
 
   describe "get_user_by_reset_password_token/1" do
     setup do
-      user = user_fixture()
+      %{user: user} = registration_fixture()
 
       token =
         extract_user_token(fn url ->
@@ -464,7 +396,7 @@ defmodule Fumo.AccountsTest do
 
   describe "reset_user_password/2" do
     setup do
-      %{user: user_fixture()}
+      registration_fixture()
     end
 
     test "validates password", %{user: user} do

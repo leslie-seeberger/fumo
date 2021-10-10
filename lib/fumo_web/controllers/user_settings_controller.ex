@@ -5,6 +5,8 @@ defmodule FumoWeb.UserSettingsController do
   alias FumoWeb.UserAuth
   alias Fumo.Profiles
 
+  require IEx
+
   plug :assign_email_and_password_changesets
 
   def edit(conn, _params) do
@@ -53,7 +55,7 @@ defmodule FumoWeb.UserSettingsController do
 
   def update(conn, %{"action" => "update_profile", "user_profile" => user_profile}) do
     user = conn.assigns.current_user
-    case Profiles.update_user_profile(user, user_profile) do
+    case Profiles.update_user_profile(user.profile, user_profile) do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Profile updated successfully.")
@@ -61,6 +63,14 @@ defmodule FumoWeb.UserSettingsController do
       {:error, changeset} ->
         render(conn, "edit.html", profile_changeset: changeset)
     end
+    #     case Profiles.update_user_profile(user, user_profile) do
+    #   {:ok, _} ->
+    #     conn
+    #     |> put_flash(:info, "Profile updated successfully.")
+    #     |> redirect(to: Routes.user_settings_path(conn, :edit))
+    #   {:error, changeset} ->
+    #     render(conn, "edit.html", profile_changeset: changeset)
+    # end
   end
 
   def confirm_email(conn, %{"token" => token}) do
@@ -83,6 +93,6 @@ defmodule FumoWeb.UserSettingsController do
     conn
     |> assign(:email_changeset, Accounts.change_user_email(user))
     |> assign(:password_changeset, Accounts.change_user_password(user))
-    |> assign(:profile_changeset, Profiles.change_user_profile_by_user(user))
+    |> assign(:profile_changeset, Profiles.change_user_profile(user.profile))
   end
 end

@@ -6,6 +6,7 @@ defmodule Fumo.Accounts do
   import Ecto.Query, warn: false
   alias Fumo.Repo
   alias Fumo.Accounts.{User, UserToken, UserNotifier}
+  alias Fumo.Profiles.UserProfile
 
   ## Database getters
 
@@ -39,8 +40,20 @@ defmodule Fumo.Accounts do
   """
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
+    user =
+      User
+      |> with_username()
+      |> Repo.get_by(email: email)
+
+      # Repo.get_by(User, email: email)
+      # |> preload(:profile, )
     if User.valid_password?(user, password), do: user
+  end
+
+  defp with_username(queryable) do
+    queryable
+    |> join(:left, [u], p in UserProfile, on: p.user_id == u.id)
+    |> select_merge([u, p], %{username: p.username})
   end
 
   @doc """
@@ -58,26 +71,6 @@ defmodule Fumo.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
-
-  ## User registration
-
-  @doc """
-  Registers a user.
-
-  ## Examples
-
-      iex> register_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> register_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
-  end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking user changes.

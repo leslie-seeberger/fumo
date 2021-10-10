@@ -1,5 +1,6 @@
-defmodule Fumo.Registration do
+defmodule Fumo.UserRegistration do
   use Ecto.Schema
+  alias Fumo.Validations
   import Ecto.Changeset
 
   alias Fumo.Accounts.User
@@ -10,18 +11,22 @@ defmodule Fumo.Registration do
     field :email
     field :username
     field :password
+    field :hashed_password
   end
 
   @required_fields ~w/email password username/a
 
-  def changeset(data, params \\ %{}) do
-    data
+  def changeset(registration, params \\ %{}) do
+    registration
     |> cast(params, @required_fields)
     |> validate_required(@required_fields)
+    |> Validations.validate_password([])
+    |> Validations.validate_username()
+    |> Validations.validate_email()
   end
 
   def to_multi(params \\ %{}) do
-    %{"username" => username} = params
+    username = Map.get(params, "username", "")
     Ecto.Multi.new
     |> Ecto.Multi.insert(:user, user_changeset(params))
     |> Ecto.Multi.run(:profile, fn _, changes ->

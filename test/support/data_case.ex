@@ -45,11 +45,20 @@ defmodule Fumo.DataCase do
       assert %{password: ["password is too short"]} = errors_on(changeset)
 
   """
-  def errors_on(changeset) do
+  def errors_on(%Ecto.Changeset{} = changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {message, opts} ->
-      Regex.replace(~r"%{(\w+)}", message, fn _, key ->
+      format_string(message, opts)
+    end)
+  end
+
+  def errors_on(changeset) when is_list(changeset) do
+    changeset
+    |> Enum.into(%{}, fn {key, {message, opts}} -> {key, [format_string(message, opts)]} end)
+  end
+
+  defp format_string(message, opts) do
+     Regex.replace(~r"%{(\w+)}", message, fn _, key ->
         opts |> Keyword.get(String.to_existing_atom(key), key) |> to_string()
       end)
-    end)
   end
 end

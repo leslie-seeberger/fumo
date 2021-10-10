@@ -2,16 +2,17 @@ defmodule FumoWeb.UserSessionControllerTest do
   use FumoWeb.ConnCase, async: true
 
   import Fumo.AccountsFixtures
+	import Fumo.RegistrationFixtures
 
   setup do
-    %{user: user_fixture()}
+    registration_fixture()
   end
 
   describe "GET /users/log_in" do
     test "renders log in page", %{conn: conn} do
       conn = get(conn, Routes.user_session_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Log in</h1>"
+      assert response =~ "Log in"
       assert response =~ "Log in</a>"
       assert response =~ "Register</a>"
     end
@@ -23,7 +24,7 @@ defmodule FumoWeb.UserSessionControllerTest do
   end
 
   describe "POST /users/log_in" do
-    test "logs the user in", %{conn: conn, user: user} do
+    test "logs the user in", %{conn: conn, user: user, profile: %{username: username}} do
       conn =
         post(conn, Routes.user_session_path(conn, :create), %{
           "user" => %{"email" => user.email, "password" => valid_user_password()}
@@ -35,7 +36,7 @@ defmodule FumoWeb.UserSessionControllerTest do
       # Now do a logged in request and assert on the menu
       conn = get(conn, "/")
       response = html_response(conn, 200)
-      assert response =~ user.email
+      assert response =~ username
       assert response =~ "Settings</a>"
       assert response =~ "Log out</a>"
     end
@@ -75,7 +76,7 @@ defmodule FumoWeb.UserSessionControllerTest do
         })
 
       response = html_response(conn, 200)
-      assert response =~ "<h1>Log in</h1>"
+      assert response =~ "Log in"
       assert response =~ "Invalid email or password"
     end
   end

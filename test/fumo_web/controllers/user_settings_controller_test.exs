@@ -2,7 +2,9 @@ defmodule FumoWeb.UserSettingsControllerTest do
   use FumoWeb.ConnCase, async: true
 
   alias Fumo.Accounts
+  alias Fumo.Profiles
   import Fumo.AccountsFixtures
+	import Fumo.RegistrationFixtures
 
   setup :register_and_log_in_user
 
@@ -10,7 +12,7 @@ defmodule FumoWeb.UserSettingsControllerTest do
     test "renders settings page", %{conn: conn} do
       conn = get(conn, Routes.user_settings_path(conn, :edit))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Settings</h1>"
+      assert response =~ "Settings</h1>"
     end
 
     test "redirects if user is not logged in" do
@@ -50,7 +52,7 @@ defmodule FumoWeb.UserSettingsControllerTest do
         })
 
       response = html_response(old_password_conn, 200)
-      assert response =~ "<h1>Settings</h1>"
+      assert response =~ "Settings</h1>"
       assert response =~ "should be at least 12 character(s)"
       assert response =~ "does not match password"
       assert response =~ "is not valid"
@@ -83,9 +85,36 @@ defmodule FumoWeb.UserSettingsControllerTest do
         })
 
       response = html_response(conn, 200)
-      assert response =~ "<h1>Settings</h1>"
+      assert response =~ "Settings</h1>"
       assert response =~ "must have the @ sign and no spaces"
       assert response =~ "is not valid"
+    end
+  end
+
+  describe "PUT /user/settings (change user profile form)" do
+    test "updates the username", %{conn: conn, user: user} do
+      new_username = Faker.Internet.user_name()
+      conn =
+        put(conn, Routes.user_settings_path(conn, :update), %{
+          "action" => "update_profile",
+          "user_profile" => %{"username" => new_username}
+        })
+
+      assert redirected_to(conn) == Routes.user_settings_path(conn, :edit)
+      assert get_flash(conn, :info) =~ "Profile updated successfully"
+      assert Profiles.get_user_profile_by_username(new_username)
+    end
+
+    test "does not update on invalid data", %{conn: conn, user: user} do
+      conn =
+        put(conn, Routes.user_settings_path(conn, :update), %{
+          "action" => "update_profile",
+          "user_profile" => %{"username" => "i n v a l i d"}
+        })
+
+      response = html_response(conn, 200)
+      assert response =~ "Settings</h1>"
+      assert response =~ "invalid format"
     end
   end
 

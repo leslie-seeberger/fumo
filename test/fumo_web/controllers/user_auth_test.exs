@@ -3,7 +3,7 @@ defmodule FumoWeb.UserAuthTest do
 
   alias Fumo.Accounts
   alias FumoWeb.UserAuth
-  import Fumo.AccountsFixtures
+  import Fumo.RegistrationFixtures
 
   @remember_me_cookie "_fumo_web_user_remember_me"
 
@@ -12,8 +12,8 @@ defmodule FumoWeb.UserAuthTest do
       conn
       |> Map.replace!(:secret_key_base, FumoWeb.Endpoint.config(:secret_key_base))
       |> init_test_session(%{})
-
-    %{user: user_fixture(), conn: conn}
+    %{user: user} = registration_fixture()
+    %{user: user, conn: conn}
   end
 
   describe "log_in_user/3" do
