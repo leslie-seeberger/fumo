@@ -12,6 +12,7 @@ defmodule Fumo.Accounts.User do
     field :username, :string, virtual: true
 
     has_one :profile, Fumo.Profiles.UserProfile
+    has_many :decks, Fumo.FlashCards.Deck
     timestamps()
   end
 

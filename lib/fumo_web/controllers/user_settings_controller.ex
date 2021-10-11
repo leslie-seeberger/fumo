@@ -5,8 +5,6 @@ defmodule FumoWeb.UserSettingsController do
   alias FumoWeb.UserAuth
   alias Fumo.Profiles
 
-  require IEx
-
   plug :assign_email_and_password_changesets
 
   def edit(conn, _params) do

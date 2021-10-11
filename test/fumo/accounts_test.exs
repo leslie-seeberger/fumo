@@ -6,8 +6,6 @@ defmodule Fumo.AccountsTest do
   import Fumo.RegistrationFixtures
   alias Fumo.Accounts.{User, UserToken}
 
-  require IEx
-
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
       refute Accounts.get_user_by_email("unknown@example.com")

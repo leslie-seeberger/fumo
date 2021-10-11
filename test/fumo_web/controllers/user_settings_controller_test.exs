@@ -92,7 +92,7 @@ defmodule FumoWeb.UserSettingsControllerTest do
   end
 
   describe "PUT /user/settings (change user profile form)" do
-    test "updates the username", %{conn: conn, user: user} do
+    test "updates the username", %{conn: conn} do
       new_username = Faker.Internet.user_name()
       conn =
         put(conn, Routes.user_settings_path(conn, :update), %{
@@ -105,7 +105,7 @@ defmodule FumoWeb.UserSettingsControllerTest do
       assert Profiles.get_user_profile_by_username(new_username)
     end
 
-    test "does not update on invalid data", %{conn: conn, user: user} do
+    test "does not update on invalid data", %{conn: conn} do
       conn =
         put(conn, Routes.user_settings_path(conn, :update), %{
           "action" => "update_profile",

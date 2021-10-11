@@ -1,7 +1,6 @@
 defmodule FumoWeb.UserSessionControllerTest do
   use FumoWeb.ConnCase, async: true
 
-  import Fumo.AccountsFixtures
 	import Fumo.RegistrationFixtures
 
   setup do

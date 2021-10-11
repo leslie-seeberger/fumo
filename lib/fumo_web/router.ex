@@ -66,6 +66,7 @@ defmodule FumoWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    resources "/decks", DeckController, except: [:index, :show]
   end
 
   scope "/", FumoWeb do
@@ -75,5 +76,7 @@ defmodule FumoWeb.Router do
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :confirm
+
+    resources "/decks", DeckController, only: [:show, :index]
   end
 end

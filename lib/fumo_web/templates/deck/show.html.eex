@@ -1,0 +1,24 @@
+<h1>Show Deck</h1>
+
+<ul>
+
+  <li>
+    <strong>Title:</strong>
+    <%= @deck.title %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @deck.description %>
+  </li>
+
+  <li>
+    <strong>Is published:</strong>
+    <%= @deck.is_published %>
+  </li>
+
+</ul>
+  <%= if Fumo.Authorizer.can_manage?(@current_user, @deck) do %>
+    <span><%= link "Edit", to: Routes.deck_path(@conn, :edit, @deck) %></span>
+  <% end %>
+<span><%= link "Back", to: Routes.deck_path(@conn, :index) %></span>
