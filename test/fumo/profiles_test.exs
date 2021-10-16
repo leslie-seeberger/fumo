@@ -11,7 +11,9 @@ defmodule Fumo.ProfilesTest do
     @invalid_attrs %{bio: nil, username: nil}
 
     setup do
-      registration_fixture()
+      %{profile: profile, user: user} = registration_fixture()
+      user = Map.put(user, :profile, profile)
+      %{profile: profile, user: user}
     end
 
     test "get_user_profile!/1 returns the user_profile with given id", %{profile: user_profile}do

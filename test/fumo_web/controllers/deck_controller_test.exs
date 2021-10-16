@@ -10,7 +10,7 @@ defmodule FumoWeb.DeckControllerTest do
  describe "index" do
     test "lists all decks", %{conn: conn} do
       conn = get(conn, Routes.deck_path(conn, :index))
-      assert html_response(conn, 200) =~ "Listing Decks"
+      assert html_response(conn, 200) =~ "All Decks</h1>"
     end
   end
 
@@ -31,7 +31,7 @@ defmodule FumoWeb.DeckControllerTest do
       assert redirected_to(conn) == Routes.deck_path(conn, :show, id)
 
       conn = get(conn, Routes.deck_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show Deck"
+      assert html_response(conn, 200) =~ "#{@create_attrs.title}</h1>"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

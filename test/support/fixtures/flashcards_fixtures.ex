@@ -18,6 +18,6 @@ defmodule Fumo.FlashCardsFixtures do
   def deck_fixture(%User{} = user, attrs \\ %{}) do
       attrs = valid_deck_attributes(attrs)
       {:ok, deck} = FlashCards.create_deck(user, attrs)
-      deck
+      FlashCards.get_deck!(deck.id, user)
   end
 end
