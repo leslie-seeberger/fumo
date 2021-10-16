@@ -1,0 +1,42 @@
+<section class="mx-auto mt-8 w-3/4">
+    <header class="p-4 text-center bg-lighter rounded-t-lg border border-light">
+        <h1 class="header">Your Decks</h1>
+    </header>
+    <div>
+        <%= if Enum.empty?(@user_decks) do %>
+            <div class="border border-light rounded-b-lg text-center py-8 px-4">
+                <p class="text-lg">Looks like you don't have any. <br/>
+                <%= link "Why not create one now?", to: Routes.deck_path(@conn, :new), class: "font-bold text-accent" %>
+                </p>
+            </div>
+        <% else %>
+            <table class="table-fixed w-full">
+                <thead class=" text-primary-light text-xl">
+                    <tr class="border-b border-primary">
+                        <th class="px-4 py-2 w-1/2">Title</th>
+                        <th class="px-4 py-2 w-1/6">Cards</th>
+                        <th class="px-4 py-2 w-1/6">Subscribers</th>
+                        <th class="px-4 py-2 w-1/3">Manage</th>
+                    </tr>
+                <thead>
+                <tbody>
+                <%= for {deck, i} <- Enum.with_index(@user_decks) do %>
+                    <tr class="text-lg <%= if rem(i, 2) == 0, do: "bg-light", else: "bg-lighter"  %>">
+                        <td class="px-4 py-2"><%= deck.title %></td>
+                        <td class="text-center px-4 py-2">0</td>
+                        <td class="text-center px-4 py-2">0</td>
+                        <td class="grid grid-cols-3 text-primary-light font-bold py-2 divide-x gap-x-1 text-center">
+                            <span><%= link "View", to: Routes.deck_path(@conn, :show, deck) %></span>
+                            <span><%= link "Edit", to: Routes.deck_path(@conn, :edit, deck) %></span>
+                            <span><%= link "Delete", to: Routes.deck_path(@conn, :delete, deck), method: :delete, data: [confirm: "Are you sure?"] %></span>
+                        </td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+        <% end %>
+    </div>
+    <footer class="p-4 text-right bg-lighter rounded-b-lg border border-light mt-12">
+        <%= button("Create a new deck", to: Routes.deck_path(@conn, :new), method: :get, class: "btn") %>
+    </footer>
+</section>

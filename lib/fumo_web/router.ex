@@ -41,7 +41,7 @@ defmodule FumoWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: FumoWeb.Telemetry
+      live_dashboard "/live_dashboard", metrics: FumoWeb.Telemetry
     end
   end
 
@@ -66,6 +66,9 @@ defmodule FumoWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+
+    get "/dashboard", PageController, :dashboard
+
     resources "/decks", DeckController, except: [:index, :show]
   end
 

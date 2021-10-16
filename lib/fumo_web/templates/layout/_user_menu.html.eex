@@ -22,8 +22,11 @@
       >
         <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
           <%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home), class: "p-4" %>
+        <div class="border-b-2 border-light m-0"></div>
+
         <% end %>
         <%= link "Settings", to: Routes.user_settings_path(@conn, :edit), class: "p-4" %>
+        <%= link "Dashboard", to: Routes.page_path(@conn, :dashboard), class: "p-4" %>
         <div class="border-b-2 border-light m-0"></div>
         <%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "p-4" %>
       </div>
