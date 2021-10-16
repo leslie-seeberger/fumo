@@ -8,6 +8,7 @@ defmodule Fumo.FlashCards do
 
   alias Fumo.FlashCards.Deck
   alias Fumo.Accounts.User
+  alias Fumo.Profiles.UserProfile
 
   @doc """
   Returns the list of published decks.
@@ -21,7 +22,7 @@ defmodule Fumo.FlashCards do
   def list_decks do
     Deck
     |> where([d], d.is_published)
-    |> preload(:user)
+    |> get_author_name()
     |> Repo.all()
   end
 
@@ -36,8 +37,12 @@ defmodule Fumo.FlashCards do
   def list_user_decks(%User{} = user) do
     Deck
     |> where_owner(user)
-    |> preload(:user)
+    |> get_author_name()
     |> Repo.all()
+  end
+
+  def list_user_decks(user_id) do
+    list_user_decks(%User{id: user_id})
   end
 
   @doc """
@@ -57,7 +62,7 @@ defmodule Fumo.FlashCards do
   def get_deck!(id, %User{} = user) do
     Deck
     |> where_published_or_owner(user)
-    |> preload(:user)
+    |> get_author_name()
     |> Repo.get!(id)
   end
 
@@ -77,7 +82,7 @@ defmodule Fumo.FlashCards do
   def get_user_deck!(%User{} = user, id) do
     Deck
     |> where_owner(user)
-    |> preload(:user)
+    |> get_author_name()
     |> Repo.get!(id)
   end
 
@@ -159,5 +164,11 @@ defmodule Fumo.FlashCards do
 
   defp where_published_or_owner(query, _user) do
     query |> where([d], d.is_published)
+  end
+
+  defp get_author_name(query) do
+    query
+    |> join(:left, [d], p in UserProfile, on: d.user_id == p.user_id)
+    |> select_merge([_d, p], %{author_name: p.username})
   end
 end

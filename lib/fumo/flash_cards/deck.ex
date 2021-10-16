@@ -7,6 +7,8 @@ defmodule Fumo.FlashCards.Deck do
     field :is_published, :boolean, default: false
     field :title, :string
 
+    field :author_name, :string, virtual: true
+
     belongs_to :user, Fumo.Accounts.User
 
     timestamps()
