@@ -1,24 +1,20 @@
-<h1>Show Deck</h1>
-
-<ul>
-
-  <li>
-    <strong>Title:</strong>
-    <%= @deck.title %>
-  </li>
-
-  <li>
-    <strong>Description:</strong>
-    <%= @deck.description %>
-  </li>
-
-  <li>
-    <strong>Is published:</strong>
-    <%= @deck.is_published %>
-  </li>
-
-</ul>
-  <%= if Fumo.Authorizer.can_manage?(@current_user, @deck) do %>
-    <span><%= link "Edit", to: Routes.deck_path(@conn, :edit, @deck) %></span>
-  <% end %>
-<span><%= link "Back", to: Routes.deck_path(@conn, :index) %></span>
+<article class="w-1/2 mx-auto mt-12 flex flex-col gap-y-4">
+  <header class="text-center">
+    <h1 class="header"><%= @deck.title %></h1>
+    <h2 class="text-sm text-gray">Created by <%= link @deck.author_name, to: Routes.user_profile_path(@conn, :show, @deck.author_name), class: "text-lg text-primary-light font-bold" %></h2>
+  </header>
+  <div>
+    <p class="text-lg"><%= @deck.description %></p>
+  </div>
+  <footer class="flex justify-end gap-4">
+    <%= if Fumo.Authorizer.can_manage?(@current_user, @deck) do %>
+      <%= button("Edit", to: Routes.deck_path(@conn, :edit, @deck), method: :get, class: "btn-outline") %>
+    <% end %>
+    <%= link to: "#", class: "btn-outline flex justify-between w-36" do %>
+      <span>View Cards</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    <% end %>
+  </footer>
+</article>
