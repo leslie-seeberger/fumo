@@ -10,6 +10,7 @@ defmodule Fumo.FlashCards.Deck do
     field :author_name, :string, virtual: true
 
     belongs_to :user, Fumo.Accounts.User
+    has_many :cards, Fumo.FlashCards.Card, on_delete: :delete_all
 
     timestamps()
   end
@@ -18,6 +19,7 @@ defmodule Fumo.FlashCards.Deck do
   def changeset(deck, attrs) do
     deck
     |> cast(attrs, [:title, :description])
+    |> cast_assoc(:cards)
     |> validate_required([:title])
     |> validate_length(:title, min: 3, max: 30)
   end
