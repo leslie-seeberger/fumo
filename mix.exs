@@ -49,7 +49,8 @@ defmodule Fumo.MixProject do
       {:phx_gen_auth, "~> 0.7", only: [:dev], runtime: false},
       {:faker, "~> 0.16.0", only: [:dev, :test]},
       {:phoenix_live_view, "~> 0.15.7"},
-      {:floki, ">= 0.30.0", only: :test}
+      {:floki, ">= 0.30.0", only: :test},
+      {:ex_machina, "~> 2.7.0", only: :test},
     ]
   end
 

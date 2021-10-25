@@ -2,10 +2,21 @@ defmodule Fumo.AccountsTest do
   use Fumo.DataCase
 
   alias Fumo.Accounts
-  import Fumo.AccountsFixtures
-  import Fumo.RegistrationFixtures
+  alias Fumo.Registration
+  import Fumo.AccountsHelper
   alias Fumo.Accounts.{User, UserToken}
 
+  def unique_username, do: Faker.Internet.user_name()
+  def unique_user_email, do: Faker.Internet.email()
+  def valid_user_password, do: "Password1234"
+
+  def registration_fixture() do
+    {:ok, fixture} = params_for(:registration)
+    |> Map.new(fn {k, v} -> {to_string(k), v } end)
+    |> Registration.register_user()
+
+    fixture
+  end
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
       refute Accounts.get_user_by_email("unknown@example.com")

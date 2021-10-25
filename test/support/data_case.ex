@@ -24,6 +24,7 @@ defmodule Fumo.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Fumo.DataCase
+      import Fumo.Factory
     end
   end
 

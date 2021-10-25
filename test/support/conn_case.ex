@@ -23,6 +23,7 @@ defmodule FumoWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import FumoWeb.ConnCase
+      import Fumo.Factory
 
       alias FumoWeb.Router.Helpers, as: Routes
 
@@ -50,7 +51,7 @@ defmodule FumoWeb.ConnCase do
   test context.
   """
   def register_and_log_in_user(%{conn: conn}) do
-    %{user: user} = Fumo.RegistrationFixtures.registration_fixture()
+    %{user: user} = Fumo.RegistrationHelper.register_user()
     %{conn: log_in_user(conn, user), user: user}
   end
 

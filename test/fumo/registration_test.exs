@@ -1,7 +1,10 @@
 defmodule Fumo.RegistrationTest do
   use Fumo.DataCase
-  import Fumo.RegistrationFixtures
   alias Fumo.Registration
+
+  def unique_username, do: Faker.Internet.user_name()
+  def unique_user_email, do: Faker.Internet.email()
+  def valid_user_password, do: "Password1234"
 
   describe "register_user/1" do
     test "requires email, username, and password to be set" do
@@ -33,11 +36,13 @@ defmodule Fumo.RegistrationTest do
     end
 
     test "registers users with a hashed password" do
-      email = unique_user_email()
-      username = unique_username()
-      {:ok, %{user: user, profile: profile}} = Registration.register_user(valid_registration_attributes(%{"email" => email, "username" => username}))
-      assert user.email == email
-      assert profile.username == username
+      registration_params = params_for(:registration) |> Map.new(fn {k, v} -> {to_string(k), v } end)
+
+      {:ok, %{user: user, profile: profile}} =
+        Registration.register_user(registration_params)
+
+      assert user.email == registration_params["email"]
+      assert profile.username == registration_params["username"]
       assert user.id == profile.user_id
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)

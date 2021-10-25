@@ -1,8 +1,6 @@
 defmodule FumoWeb.DeckControllerTest do
   use FumoWeb.ConnCase
 
-  alias Fumo.FlashCardsFixtures
-
   @create_attrs %{description: "some description", is_published: false, title: "some title"}
   @update_attrs %{description: "some updated description", is_published: false, title: "some updated title"}
   @invalid_attrs %{description: nil, is_published: nil, title: nil}
@@ -83,7 +81,7 @@ defmodule FumoWeb.DeckControllerTest do
   end
 
   defp create_deck(conn) do
-    deck = FlashCardsFixtures.deck_fixture(conn.user)
+    deck = insert(:deck, user: conn.user)
 
     %{deck: deck}
   end

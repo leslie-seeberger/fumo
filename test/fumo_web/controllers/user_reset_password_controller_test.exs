@@ -3,12 +3,15 @@ defmodule FumoWeb.UserResetPasswordControllerTest do
 
   alias Fumo.Accounts
   alias Fumo.Repo
-  import Fumo.AccountsFixtures
-  import Fumo.RegistrationFixtures
+  alias Fumo.Registration
+  import Fumo.AccountsHelper
 
   setup do
-    # %{user: registration_fixture()}
-    registration_fixture()
+    {:ok, fixture} = params_for(:registration)
+    |> Map.new(fn {k, v} -> {to_string(k), v } end)
+    |> Registration.register_user()
+
+    fixture
   end
 
   describe "GET /users/reset_password" do

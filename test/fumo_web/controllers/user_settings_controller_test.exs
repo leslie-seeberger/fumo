@@ -3,8 +3,11 @@ defmodule FumoWeb.UserSettingsControllerTest do
 
   alias Fumo.Accounts
   alias Fumo.Profiles
-  import Fumo.AccountsFixtures
-	import Fumo.RegistrationFixtures
+  import Fumo.AccountsHelper
+
+  def unique_username, do: Faker.Internet.user_name()
+  def unique_user_email, do: Faker.Internet.email()
+  def valid_user_password, do: "Password1234"
 
   setup :register_and_log_in_user
 

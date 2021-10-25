@@ -3,11 +3,15 @@ defmodule FumoWeb.UserConfirmationControllerTest do
 
   alias Fumo.Accounts
   alias Fumo.Repo
-  import Fumo.RegistrationFixtures
-  import Fumo.AccountsFixtures
+  import Fumo.AccountsHelper
 
   setup do
-    registration_fixture()
+    {:ok, fixture} =
+      params_for(:registration)
+      |> Map.new(fn {k, v} -> {to_string(k), v } end)
+      |> Fumo.Registration.register_user()
+
+    fixture
   end
 
   describe "GET /users/confirm" do

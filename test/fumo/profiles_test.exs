@@ -2,7 +2,6 @@ defmodule Fumo.ProfilesTest do
   use Fumo.DataCase
 
   alias Fumo.Profiles
-  import Fumo.RegistrationFixtures
 
   describe "user_profiles" do
     alias Fumo.Profiles.UserProfile
@@ -11,8 +10,9 @@ defmodule Fumo.ProfilesTest do
     @invalid_attrs %{bio: nil, username: nil}
 
     setup do
-      %{profile: profile, user: user} = registration_fixture()
-      user = Map.put(user, :profile, profile)
+      user = insert(:user)
+      profile = insert(:profile, user: user) |> forget(:user)
+
       %{profile: profile, user: user}
     end
 

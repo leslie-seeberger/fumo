@@ -1,11 +1,13 @@
 defmodule FumoWeb.UserSessionControllerTest do
   use FumoWeb.ConnCase, async: true
 
-	import Fumo.RegistrationFixtures
+  alias Fumo.RegistrationHelper
 
   setup do
-    registration_fixture()
+    RegistrationHelper.register_user()
   end
+
+  @valid_user_password "Password1234"
 
   describe "GET /users/log_in" do
     test "renders log in page", %{conn: conn} do
@@ -26,7 +28,7 @@ defmodule FumoWeb.UserSessionControllerTest do
     test "logs the user in", %{conn: conn, user: user, profile: %{username: username}} do
       conn =
         post(conn, Routes.user_session_path(conn, :create), %{
-          "user" => %{"email" => user.email, "password" => valid_user_password()}
+          "user" => %{"email" => user.email, "password" => @valid_user_password}
         })
 
       assert get_session(conn, :user_token)
@@ -45,7 +47,7 @@ defmodule FumoWeb.UserSessionControllerTest do
         post(conn, Routes.user_session_path(conn, :create), %{
           "user" => %{
             "email" => user.email,
-            "password" => valid_user_password(),
+            "password" => @valid_user_password,
             "remember_me" => "true"
           }
         })
@@ -61,7 +63,7 @@ defmodule FumoWeb.UserSessionControllerTest do
         |> post(Routes.user_session_path(conn, :create), %{
           "user" => %{
             "email" => user.email,
-            "password" => valid_user_password()
+            "password" => @valid_user_password
           }
         })
 

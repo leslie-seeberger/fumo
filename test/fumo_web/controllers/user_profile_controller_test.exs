@@ -2,12 +2,6 @@ defmodule FumoWeb.UserProfileControllerTest do
   use FumoWeb.ConnCase
 
   alias Fumo.Profiles.UserProfile
-  alias Fumo.RegistrationFixtures
-
-  def fixture(:user_profile) do
-    %{profile: user_profile} = RegistrationFixtures.registration_fixture()
-    user_profile
-  end
 
   describe "show" do
     setup [:create_user_profile]
@@ -24,7 +18,8 @@ defmodule FumoWeb.UserProfileControllerTest do
   end
 
   defp create_user_profile(_) do
-    user_profile = fixture(:user_profile)
+    user_profile = insert(:user).profile
+
     %{user_profile: user_profile}
   end
 end
