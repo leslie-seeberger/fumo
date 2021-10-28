@@ -53,7 +53,7 @@ defmodule FumoWeb.DeckController do
       {:ok, deck} ->
         conn
         |> put_flash(:info, "Deck updated successfully.")
-        |> redirect(to: Routes.deck_path(conn, :show, deck))
+        |> redirect(to: Routes.deck_path(conn, :edit, deck))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", deck: deck, changeset: changeset)
@@ -66,7 +66,7 @@ defmodule FumoWeb.DeckController do
 
     conn
     |> put_flash(:info, "Deck deleted successfully.")
-    |> redirect(to: Routes.deck_path(conn, :index))
+    |> redirect(to: Routes.page_path(conn, :dashboard))
   end
 
   def action(%Plug.Conn{assigns: %{current_user: current_user}} = conn, _opts) do

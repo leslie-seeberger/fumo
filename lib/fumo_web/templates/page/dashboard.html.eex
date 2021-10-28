@@ -28,7 +28,9 @@
                         <td class="grid grid-cols-3 text-primary-light font-bold py-2 divide-x gap-x-1 text-center">
                             <span><%= link "View", to: Routes.deck_path(@conn, :show, deck) %></span>
                             <span><%= link "Edit", to: Routes.deck_path(@conn, :edit, deck) %></span>
-                            <span><%= link "Delete", to: Routes.deck_path(@conn, :delete, deck), method: :delete, data: [confirm: "Are you sure?"] %></span>
+                            <span><%= link "Delete", to: Routes.deck_path(@conn, :delete, deck), 
+                            method: :delete, 
+                            data: [confirm: "Are you sure?"] %></span>
                         </td>
                     </tr>
                 <% end %>

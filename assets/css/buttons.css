@@ -7,5 +7,9 @@
 }
 
 .btn-outline {
-  @apply py-2 px-4 border border-primary text-primary rounded-full;
+  @apply py-2 px-4 border text-center border-primary-light text-primary-light rounded-full;
+}
+
+.btn-outline:disabled {
+  @apply border-gray text-gray;
 }

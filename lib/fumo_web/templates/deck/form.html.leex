@@ -1,0 +1,96 @@
+<%= f = form_for @changeset, @action, [class: "form"]  %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+  <div>
+    <%= label f, :title, class: "sr-only" %>
+    <%= text_input f, :title, required: true, class: "form-input", placeholder: "Title"%>
+    <%= error_tag f, :title %>
+  </div>
+  <div>
+    <%= label f, :description, class: "sr-only" %>
+    <%= textarea f, :description, class: "form-input", placeholder: "Description" %>
+    <%= error_tag f, :description %>
+  </div>
+  <div class="flex justify-between">
+    <%= link to: Routes.page_path(@conn, :dashboard), class: "flex" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+      </svg>
+      <span>Decks</span>
+    <% end %>
+    <%= submit "Save", class: "btn" %>
+  </div>
+  <section id="card-forms" class=" flex flex-col gap-8">
+    <header>
+        <h1 class="header">Add/Edit Cards</h1>
+        <a href="#" phx-click="add-card" class="text-lg text-primary-light font-bold mt-4 block">add a card</a>
+    </header>
+    <div class="divide-y divide-light">
+      <%= inputs_for f, :cards,fn c -> %>
+        <article
+        x-cloak
+        x-data="{preview: false, card: <%= to_json(c.data, [:front, :back]) %>}"
+        class="flex py-4">
+          <div class="w-4/5 flex flex-col h-80 overflow-hidden">
+            <div
+            class="flex flex-wrap justify-center content-center w-full h-full"
+            x-show="preview"
+            x-transition:enter="transition ease-out "
+            x-transition:enter-start="opacity-0 transform -translate-y-full"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform -translate-y-full"
+            >
+              <div class="card-wrapper">
+                <div class="card p-2" x-data="{ flip: false}" id="card-preview-<%= c.id || c.temp_id %>">
+                  <div class="card-inner card-front">
+                    <p x-text="card.front"></p>
+                  </div>
+                  <div class="card-inner card-back">
+                    <p x-text="card.back"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div x-show="!preview"
+            x-transition:enter="transition ease-out "
+            x-transition:enter-start="opacity-0 transform translate-y-full"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-full"
+            id="card-form-<%= c.id || c.temp_id %>"
+            class="flex flex-wrap justify-center content-center gap-4 h-full">
+              <div class="">
+                <%= label c, :front, class: "sr-only" %>
+                <%= textarea c, :front, class: "card-input", placeholder: "Front", "x-model": "front" %>
+                <%= error_tag c, :front %>
+              </div>
+              <div class="">
+                <%= label c, :back, class: "sr-only" %>
+                <%= textarea c, :back, class: "card-input", placeholder: "Back", "x-model": "back" %>
+                <%= error_tag c, :back %>
+              </div>
+            </div>
+          </div>
+          <div class="bg-lighter p-4 -my-4 flex flex-col gap-4 w-1/5 justify-self-end">
+            <button class="btn-outline text-primary-light border-primary-light" phx-click="preview" x-on:click.prevent="preview = !preview">
+              <span x-show="!preview" x-transition:enter="transition ">Preview</span>
+              <span x-show="preview">Edit</span>
+            </button>
+            <%= if c.data.id do %>
+              <%= hidden_input c, :delete,[ "x-model": "card.delete"] %>
+              <button class="btn-outline" x-on:click="card.delete = true">Remove</button>
+            <% else %>
+            <button class="btn-outline" phx-click="remove-card" phx-value-remove="<%= c.data.temp_id %>">Remove</button>
+            <% end %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  </section>
+</form>
