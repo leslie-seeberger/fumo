@@ -8,6 +8,8 @@
 @import "./buttons.css";
 @import "./cards.css";
 
+@import "animate.css";
+
 body {
   @apply text-gray;
 }

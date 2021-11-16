@@ -11,6 +11,56 @@ import "phoenix_html";
 
 window.Alpine = Alpine;
 
+// Hooks
+let Hooks = {};
+Hooks.Card = {
+  currentCard: null,
+  animatedClasses: function () {
+    const animated = "animate__animated";
+    const fadeOutRight = "animate__fadeOutRight";
+    const fadeOutLeft = "animate__fadeOutLeft";
+    const fadeInLeft = "animate__fadeInLeft";
+    const fadeInRight = "animate__fadeInRight";
+
+    return {
+      all: [animated, fadeOutLeft, fadeOutRight, fadeInLeft, fadeInRight],
+      next: {
+        enter: [animated, fadeInRight],
+        exit: [animated, fadeOutLeft],
+      },
+      prev: {
+        enter: [animated, fadeInLeft],
+        exit: [animated, fadeOutRight],
+      },
+    };
+  },
+  animateCard: function (dir, addExitAnimation = true) {
+    let exitClasses = this.animatedClasses()[dir].exit;
+    let enterClasses = this.animatedClasses()[dir].enter;
+    let allClasses = this.animatedClasses().all;
+
+    this.currentCard.classList.remove(...allClasses);
+    this.currentCard.classList.add(...exitClasses);
+
+    this.currentCard.addEventListener("animationend", () => {
+      this.currentCard.classList.remove(...allClasses);
+      this.currentCard.classList.add(...enterClasses);
+    });
+  },
+  mounted() {
+    this.currentCard = document.getElementById("current_card");
+    this.currentCard.classList.add(...this.animatedClasses().next.enter);
+  },
+  updated() {
+    this.handleEvent("next-card", () => {
+      this.animateCard("next");
+    });
+    this.handleEvent("prev-card", () => {
+      this.animateCard("prev");
+    });
+  },
+};
+
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");
@@ -29,6 +79,7 @@ let liveSocket = new LiveSocket("/live", Socket, {
       }
     },
   },
+  hooks: Hooks,
 });
 
 // Connect if there are any LiveViews on the page

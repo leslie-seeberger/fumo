@@ -6,7 +6,7 @@ defmodule Fumo.FlashCards do
   import Ecto.Query, warn: false
   alias Fumo.Repo
 
-  alias Fumo.FlashCards.Deck
+  alias Fumo.FlashCards.{Deck, Card}
   alias Fumo.Accounts.User
   alias Fumo.Profiles.UserProfile
 
@@ -22,7 +22,7 @@ defmodule Fumo.FlashCards do
   def list_decks do
     Deck
     |> where([d], d.is_published)
-    |> get_author_name()
+    |> get_list_data()
     |> Repo.all()
   end
 
@@ -37,7 +37,7 @@ defmodule Fumo.FlashCards do
   def list_user_decks(%User{} = user) do
     Deck
     |> where_owner(user)
-    |> get_author_name()
+    |> get_list_data()
     |> Repo.all()
   end
 
@@ -174,7 +174,13 @@ defmodule Fumo.FlashCards do
     |> select_merge([_d, p], %{author_name: p.username})
   end
 
-  alias Fumo.FlashCards.Card
+  defp get_list_data(query) do
+    query
+    |> join(:left, [d], p in UserProfile, on: d.user_id == p.user_id)
+    |> join(:left, [d], c in Card, on: d.id == c.deck_id)
+    |> group_by([d, u, _c], [d.id, u.username])
+    |> select_merge([_d,u, c], %{card_count: count(c.id), author_name: u.username})
+  end
 
   @doc """
   Creates a card.

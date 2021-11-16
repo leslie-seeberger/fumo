@@ -6,15 +6,12 @@
   <div>
     <p class="text-lg"><%= @deck.description %></p>
   </div>
+  <div class="mx-auto">
+    <%= live_render(@conn, FumoWeb.CardListComponent, session: %{"cards" => @deck.cards}) %>
+  </div>
   <footer class="flex justify-end gap-4">
     <%= if Fumo.Authorizer.can_manage?(@current_user, @deck) do %>
       <%= button("Edit", to: Routes.deck_path(@conn, :edit, @deck), method: :get, class: "btn-outline") %>
-    <% end %>
-    <%= link to: "#", class: "btn-outline flex justify-between w-36" do %>
-      <span>View Cards</span>
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-      </svg>
     <% end %>
   </footer>
 </article>

@@ -53,3 +53,7 @@
   backface-visibility: hidden;
   transform-style: preserve-3d;
 }
+
+#current_card.animate__animated {
+  --animate-duration: 0.5s;
+}

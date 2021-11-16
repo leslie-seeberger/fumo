@@ -8,6 +8,7 @@ defmodule Fumo.FlashCards.Deck do
     field :title, :string
 
     field :author_name, :string, virtual: true
+    field :card_count, :integer, virtual: true
 
     belongs_to :user, Fumo.Accounts.User
     has_many :cards, Fumo.FlashCards.Card, on_delete: :delete_all

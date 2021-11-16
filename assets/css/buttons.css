@@ -2,6 +2,10 @@
   @apply bg-secondary text-white font-bold py-2 px-14 rounded-full;
 }
 
+.btn:disabled {
+  @apply bg-gray text-white cursor-not-allowed;
+}
+
 .btn-short {
   @apply bg-secondary text-white px-4 py-2 rounded-full;
 }

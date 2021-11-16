@@ -11,6 +11,7 @@ defmodule FumoWeb.PageController do
 
   def dashboard(conn, _params, current_user) do
     user_decks = FlashCards.list_user_decks(current_user)
+
     render(conn, "dashboard.html", user_decks: user_decks)
   end
 

@@ -35,7 +35,7 @@
           <tr class=" <%= if rem(i, 2) == 0, do: "bg-light", else: "bg-lighter"  %>">
             <td class="px-4 py-2"><%= link deck.title, to: Routes.deck_path(@conn, :show, deck), class: "text-primary-light font-bold" %></td>
             <td class="px-4 py-2 text-center"><%= link deck.author_name, to: Routes.user_profile_path(@conn, :show, deck.author_name) %></td>
-            <td class="px-4 py-2 text-center">0</td>
+            <td class="px-4 py-2 text-center"><%= deck.card_count %></td>
             <td class="px-4 py-2">
               None
             </td>
