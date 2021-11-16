@@ -20,4 +20,9 @@ defmodule FumoWeb.LiveHelpers do
     modal_opts = [id: :modal, return_to: path, component: component, opts: opts]
     live_component(FumoWeb.ModalComponent, modal_opts)
   end
+
+  def live_tooltip(opts) do
+    message = Keyword.fetch!(opts, :message)
+    live_component(FumoWeb.TooltipComponent, [message: message, opts: opts])
+  end
 end

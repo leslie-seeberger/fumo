@@ -14,6 +14,12 @@
     <%= textarea f, :description, class: "form-input", placeholder: "Description" %>
     <%= error_tag f, :description %>
   </div>
+  <div class="place-self-end flex gap-2 items-center">
+    <%= FumoWeb.LiveHelpers.live_tooltip message: "A deck needs at least 3 cards in order to be published." %>
+    <%= label f, :is_published, "Publish" %>
+    <%= checkbox f, :is_published, class: "form-input", disabled: disable_publish(@changeset) %>
+    <%= error_tag f, :is_published %>
+  </div>
   <div class="flex justify-between">
     <%= link to: Routes.page_path(@conn, :dashboard), class: "flex" do %>
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -25,7 +31,7 @@
   </div>
   <section id="card-forms" class=" flex flex-col gap-8">
     <header>
-        <h1 class="header">Add/Edit Cards</h1>
+        <h1 class="header">Cards</h1>
         <a href="#" phx-click="add-card" class="text-lg text-primary-light font-bold mt-4 block">add a card</a>
     </header>
     <div class="divide-y divide-light">

@@ -37,12 +37,16 @@ defmodule Fumo.Factory do
       is_published: false,
       description: Faker.Lorem.paragraph(),
       user: build(:user),
-      cards: build_list(1, :card)
+      cards: build_list(3, :card)
     }
   end
 
   def with_author_name(%Deck{user: user} = deck) do
     %Deck{ deck | author_name: user.profile.username}
+  end
+
+  def with_card_count(%Deck{cards: cards} = deck) do
+    %Deck{deck | card_count: Enum.count(cards)}
   end
 
   def card_factory() do

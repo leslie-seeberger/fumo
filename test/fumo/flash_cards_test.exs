@@ -2,23 +2,27 @@ defmodule Fumo.FlashCardsTest do
   use Fumo.DataCase
 
   alias Fumo.FlashCards
+  alias Fumo.FlashCards.Deck
 
-  describe "unpublished decks" do
-    alias Fumo.FlashCards.Deck
+  describe "decks" do
 
     @valid_attrs %{description: "some description", is_published: false, title: "some title"}
-    @update_attrs %{description: "some updated description", is_published: false, title: "some updated title"}
-    @invalid_attrs %{description: nil, is_published: nil, title: nil}
+    @update_attrs %{description: "some updated description", is_published: true, title: "some updated title"}
+    @invalid_attrs %{description: nil, is_published: false, title: nil}
 
     setup do
       user = insert(:user)
       deck = insert(:deck, user: user)
 
+      cards = build_list(3, :card)
+      insert_list(5, :deck, %{is_published: true, cards: cards})
+
       %{user: user, deck: deck}
     end
 
-    defp deck_with_author(user) do
-      build(:deck, user: user)
+    defp deck_with_author(user, opts \\ %{}) do
+      opts = Map.put(opts, :user, user)
+      build(:deck, opts)
         |> with_author_name()
         |> insert()
         |> forget(:user)
@@ -26,12 +30,12 @@ defmodule Fumo.FlashCardsTest do
 
     test "list_decks/0 returns all published decks" do
       decks = FlashCards.list_decks()
-      assert  decks == []
+      assert Enum.count(decks) == 5
     end
 
     test "list_user_decks/1 returns user's decks" do
       user = insert(:user)
-      deck = deck_with_author(user) |> forget(:cards, :many)
+      deck = deck_with_author(user) |> with_card_count() |> forget(:cards, :many)
       decks = FlashCards.list_user_decks(user)
 
       assert  decks == [deck]
@@ -65,8 +69,17 @@ defmodule Fumo.FlashCardsTest do
     test "update_deck/2 with valid data updates the deck", %{deck: deck} do
       assert {:ok, %Deck{} = deck} = FlashCards.update_deck(deck, @update_attrs)
       assert deck.description == "some updated description"
-      assert deck.is_published == false
+      assert deck.is_published == true
       assert deck.title == "some updated title"
+    end
+
+    test "update_deck/2 with is_published = true only works under valid conditions" do
+      user = insert(:user)
+      deck = deck_with_author(user, %{cards: build_list(2, :card)})
+
+      assert deck == FlashCards.get_deck!(deck.id, user)
+      assert {:error, %Ecto.Changeset{}} = FlashCards.update_deck(deck, %{is_published: true})
+
     end
 
     test "update_deck/2 with invalid data returns error changeset" do

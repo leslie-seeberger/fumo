@@ -25,3 +25,32 @@ hr {
 [x-cloak] {
   display: none !important;
 }
+.tooltip_container {
+  @apply relative overflow-visible;
+}
+
+.tooltip_container:hover .tooltip {
+  @apply visible;
+}
+
+.tooltip {
+  @apply z-50 absolute bottom-8 left-1/2 invisible text-center;
+  width: 28rem;
+  margin-left: -14rem;
+}
+
+.tooltip_message {
+  @apply bg-primary-light border rounded-lg font-bold 
+  border-primary text-white p-4 inline-block;
+}
+
+.tooltip_message::after {
+  @apply absolute border-8 -ml-1 -bottom-4 left-1/2;
+  content: "";
+  border-color: theme("colors.primary.light") transparent transparent
+    transparent !important;
+}
+
+.tooltip_icon {
+  @apply text-primary-light;
+}
