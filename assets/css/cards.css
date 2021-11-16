@@ -36,7 +36,8 @@
   transform-style: preserve-3d;
 }
 
-.card-wrapper:hover .card {
+.card-wrapper:hover .card,
+.flip {
   transform: rotateY(180deg);
 }
 .card-wrapper {

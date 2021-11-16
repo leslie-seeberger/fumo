@@ -13,7 +13,7 @@ defmodule FumoWeb.CardListComponent do
     card = Enum.at(assigns.cards, assigns.current)
     ~L"""
       <div
-      class="flex items-center justify-center"
+      class="flex items-center justify-center" x-data="{flip: false}"
       >
         <%= live_component(@socket, CardComponent, card: card, id: "current_card") %>
       </div>
