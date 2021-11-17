@@ -13,6 +13,7 @@ defmodule Fumo.FlashCards.Deck do
     field :card_count, :integer, virtual: true
 
     belongs_to :user, Fumo.Accounts.User
+    belongs_to :category, Fumo.FlashCards.Category
     has_many :cards, Fumo.FlashCards.Card, on_delete: :delete_all
 
     timestamps()
@@ -21,26 +22,25 @@ defmodule Fumo.FlashCards.Deck do
   @doc false
   def changeset(deck, attrs) do
     deck
-    |> cast(attrs, [:title, :description, :is_published])
+    |> cast(attrs, [:title, :description, :is_published, :category_id])
     |> cast_assoc(:cards)
-    |> validate_required([:title])
+    |> validate_required([:title, :category_id])
     |> validate_length(:title, min: 3, max: 30)
     |> validate_publish()
   end
 
   defp validate_publish(changeset) do
-    cards = get_field(changeset, :cards)
+    cards = get_field(changeset, :cards, [])
     cards_change = get_change(changeset, :cards, cards)
-    publish = get_field(changeset, :is_published)
-    publish_change = get_change(changeset, :is_published, publish)
+    publish = get_field(changeset, :is_published, false)
+    publish_change = get_change(changeset, :is_published, is_boolean(publish) and publish)
 
-    # IEx.pry()
-
-    if publish_change and length(cards_change) < 3 do
-      changeset = put_change(changeset, :is_published, false)
-       add_error(changeset, :is_published, "Must have at least 3 cards to publish")
-    else
-      changeset
+    cond do
+      not is_boolean(publish_change) -> add_error(changeset, :is_published, "Invalid value")
+      publish_change and Enum.count(cards_change) < 3 ->
+        changeset = put_change(changeset, :is_published, false)
+        add_error(changeset, :is_published, "Must have at least 3 cards to publish")
+      true -> changeset
     end
   end
 end

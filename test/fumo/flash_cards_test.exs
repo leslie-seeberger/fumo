@@ -50,16 +50,18 @@ defmodule Fumo.FlashCardsTest do
     end
 
     test "get_deck!/1 returns the deck with given id", %{user: user} do
-      deck = deck_with_author(user)
+      deck = deck_with_author(user) |> forget(:category)
 
       assert FlashCards.get_deck!(deck.id, user) == deck
     end
 
     test "create_deck/1 with valid data creates a deck", %{user: user} do
-      assert {:ok, %Deck{} = deck} = FlashCards.create_deck(user, @valid_attrs)
-      assert deck.description == "some description"
-      assert deck.is_published == false
-      assert deck.title == "some title"
+      attrs = params_with_assocs(:deck)
+
+      assert {:ok, %Deck{} = deck} = FlashCards.create_deck(user, attrs)
+      assert deck.description == attrs.description
+      assert deck.is_published == attrs.is_published
+      assert deck.title == attrs.title
     end
 
     test "create_deck/1 with invalid data returns error changeset", %{user: user} do
@@ -67,6 +69,8 @@ defmodule Fumo.FlashCardsTest do
     end
 
     test "update_deck/2 with valid data updates the deck", %{deck: deck} do
+      deck = deck |> forget(:category)
+
       assert {:ok, %Deck{} = deck} = FlashCards.update_deck(deck, @update_attrs)
       assert deck.description == "some updated description"
       assert deck.is_published == true
@@ -75,7 +79,7 @@ defmodule Fumo.FlashCardsTest do
 
     test "update_deck/2 with is_published = true only works under valid conditions" do
       user = insert(:user)
-      deck = deck_with_author(user, %{cards: build_list(2, :card)})
+      deck = deck_with_author(user, %{cards: build_list(2, :card)}) |> forget(:category)
 
       assert deck == FlashCards.get_deck!(deck.id, user)
       assert {:error, %Ecto.Changeset{}} = FlashCards.update_deck(deck, %{is_published: true})
@@ -84,7 +88,7 @@ defmodule Fumo.FlashCardsTest do
 
     test "update_deck/2 with invalid data returns error changeset" do
       user = insert(:user)
-      deck = deck_with_author(user)
+      deck = deck_with_author(user) |> forget(:category)
 
       assert {:error, %Ecto.Changeset{}} = FlashCards.update_deck(deck, @invalid_attrs)
       assert deck == FlashCards.get_deck!(deck.id, user)
@@ -142,6 +146,32 @@ defmodule Fumo.FlashCardsTest do
     test "change_card/1 returns a card changeset" do
       card = insert(:card)
       assert %Ecto.Changeset{} = FlashCards.change_card(card)
+    end
+  end
+
+  describe "categories" do
+    alias Fumo.FlashCards.Category
+
+    @valid_attrs %{name: "some name"}
+    @invalid_attrs %{name: nil}
+
+    test "list_categories/0 returns all categories" do
+      categories = insert_list(3, :category)
+      assert FlashCards.list_categories() == categories
+    end
+
+    test "create_category/1 with valid data creates a category" do
+      assert {:ok, %Category{} = category} = FlashCards.create_category(@valid_attrs)
+      assert category.name == "some name"
+    end
+
+    test "create_category/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = FlashCards.create_category(@invalid_attrs)
+    end
+
+    test "change_category/1 returns a category changeset" do
+      category = insert(:category)
+      assert %Ecto.Changeset{} = FlashCards.change_category(category)
     end
   end
 end

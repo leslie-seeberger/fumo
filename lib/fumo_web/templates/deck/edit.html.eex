@@ -16,5 +16,7 @@
             <% end %>
         </i>
     </header>
-    <%= live_render(@conn, FumoWeb.DeckLive.Form, id: "deck-#{@deck.id}" , session: %{"id" => @deck.id, "current_user" => @current_user, "action" => Routes.deck_path(@conn, :update, @deck)}) %>
+    <%= live_render(@conn, FumoWeb.DeckLive.Form, 
+        id: "deck-#{@deck.id}" , 
+        session: %{"id" => @deck.id, "current_user" => @current_user, "action" => Routes.deck_path(@conn, :update, @deck)}) %>
 </section>

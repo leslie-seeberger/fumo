@@ -22,17 +22,17 @@
                 <tr class="text-lg text-secondary">
                     <th class="w-1/3 px-4 py-2">Title</th>
                     <th class="w-1/6 px-4 py-2">Cards</th>
-                    <th class="w-1/3 px-4 py-2">Categories</th>
-                    <th class="w-1/6 px-4 py-2"></th>
+                    <th class="w-1/6 px-4 py-2">Category</th>
+                    <th class="w-1/3 px-4 py-2"></th>
                 </tr>
             </thead>
       <tbody class="text-lg">
         <%= for {deck, i} <- Enum.with_index(@decks) do %>
           <tr class=" <%= if rem(i, 2) == 0, do: "bg-light", else: "bg-lighter"  %>">
             <td class="px-4 py-2"><%= link deck.title, to: Routes.deck_path(@conn, :show, deck), class: "text-primary-light font-bold" %></td>
-            <td class="px-4 py-2 text-center">0</td>
+            <td class="px-4 py-2 text-center"><%= deck.card_count %></td>
             <td class="px-4 py-2">
-              None
+              <%= deck.category.name %>
             </td>
             <td class="px-4 py-2">
                 <%= link("Subscribe", to: "#", class: "text-secondary font-bold") %>

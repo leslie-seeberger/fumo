@@ -23,6 +23,7 @@ defmodule Fumo.FlashCards do
     Deck
     |> where([d], d.is_published)
     |> get_list_data()
+    |> preload(:category)
     |> Repo.all()
   end
 
@@ -38,6 +39,7 @@ defmodule Fumo.FlashCards do
     Deck
     |> where_owner(user)
     |> get_list_data()
+    |> preload(:category)
     |> Repo.all()
   end
 
@@ -245,5 +247,51 @@ defmodule Fumo.FlashCards do
   """
   def change_card(%Card{} = card, attrs \\ %{}) do
     Card.changeset(card, attrs)
+  end
+
+  alias Fumo.FlashCards.Category
+
+  @doc """
+  Returns the list of categories.
+
+  ## Examples
+
+      iex> list_categories()
+      [%Category{}, ...]
+
+  """
+  def list_categories do
+    Repo.all(Category)
+  end
+
+  @doc """
+  Creates a category.
+
+  ## Examples
+
+      iex> create_category(%{field: value})
+      {:ok, %Category{}}
+
+      iex> create_category(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_category(attrs \\ %{}) do
+    %Category{}
+    |> Category.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking category changes.
+
+  ## Examples
+
+      iex> change_category(category)
+      %Ecto.Changeset{data: %Category{}}
+
+  """
+  def change_category(%Category{} = category, attrs \\ %{}) do
+    Category.changeset(category, attrs)
   end
 end

@@ -2,6 +2,7 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="checkbox"],
+select,
 textarea {
   @apply border-0 bg-lighter text-gray;
 }
@@ -9,7 +10,8 @@ textarea {
 input[type="text"],
 input[type="email"],
 input[type="password"],
-input[type="checkbox"] {
+input[type="checkbox"],
+select {
   @apply rounded-full;
 }
 

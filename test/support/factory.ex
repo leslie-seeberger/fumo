@@ -1,7 +1,7 @@
 defmodule Fumo.Factory do
   use ExMachina.Ecto, repo: Fumo.Repo
 
-  alias Fumo.FlashCards.{Deck, Card}
+  alias Fumo.FlashCards.{Deck, Card, Category}
   alias Fumo.Accounts.User
   alias Fumo.Profiles.UserProfile
   alias Fumo.UserRegistration
@@ -37,7 +37,8 @@ defmodule Fumo.Factory do
       is_published: false,
       description: Faker.Lorem.paragraph(),
       user: build(:user),
-      cards: build_list(3, :card)
+      cards: build_list(3, :card),
+      category: build(:category)
     }
   end
 
@@ -53,6 +54,12 @@ defmodule Fumo.Factory do
     %Card{
       front: Faker.Lorem.sentence(1..2),
       back: Faker.Lorem.sentence(1..2),
+    }
+  end
+
+  def category_factory() do
+    %Category{
+      name: Faker.Lorem.word()
     }
   end
 

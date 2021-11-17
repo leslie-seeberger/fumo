@@ -53,7 +53,7 @@ defmodule FumoWeb.DeckController do
       {:ok, deck} ->
         conn
         |> put_flash(:info, "Deck updated successfully.")
-        |> redirect(to: Routes.deck_path(conn, :edit, deck))
+        |> redirect(to: Routes.deck_path(conn, :show, deck))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", deck: deck, changeset: changeset)

@@ -12,11 +12,14 @@ defmodule FumoWeb.DeckLive.Form do
       FlashCards.change_deck(deck)
       |> Ecto.Changeset.put_assoc(:cards, deck.cards)
 
+    category_options = FlashCards.list_categories()
+
     assigns = [
       conn: socket,
       changeset: changeset,
       deck: deck,
-      action: action
+      action: action,
+      category_options: category_options
     ]
 
     {:ok, assign(socket, assigns)}
