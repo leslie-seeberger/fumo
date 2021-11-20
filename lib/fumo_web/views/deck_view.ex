@@ -11,4 +11,8 @@ defmodule FumoWeb.DeckView do
     temp_cards = Map.get(changeset.changes, :cards, [])
     Enum.count(cards ++ temp_cards) < 3
   end
+
+  def user_is_subscribed(deck_id, user_subscriptions) do
+    Enum.any?(user_subscriptions, fn us -> us.id == deck_id end)
+  end
 end

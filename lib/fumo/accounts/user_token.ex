@@ -51,7 +51,7 @@ defmodule Fumo.Accounts.UserToken do
       on: u.id == user.id,
       join: p in UserProfile,
       on: user.id == p.user_id,
-      preload: [:profile],
+      preload: [:profile, :subscriptions],
       select: %{user | username: p.username}
 
 

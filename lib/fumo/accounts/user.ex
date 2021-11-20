@@ -13,6 +13,8 @@ defmodule Fumo.Accounts.User do
 
     has_one :profile, Fumo.Profiles.UserProfile
     has_many :decks, Fumo.FlashCards.Deck
+    many_to_many :subscriptions, Fumo.FlashCards.Deck, join_through: Fumo.Subscriptions.DeckSubscription
+
     timestamps()
   end
 

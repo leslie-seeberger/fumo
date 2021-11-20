@@ -1,0 +1,52 @@
+<table class="table-fixed w-full">
+      <thead>
+        <tr class="text-lg text-secondary">
+          <th class="w-1/3 px-4 py-2 text-left">Title</th>
+          <th class="w-1/6 px-4 py-2">Author</th>
+          <th class="w-1/6 px-4 py-2">Cards</th>
+          <th class="w-1/6 px-4 py-2">Category</th>
+          <th class="w-1/6 px-4 py-2"></th>
+        </tr>
+      </thead>
+      <tbody class="text-lg">
+      <%= if Enum.empty?(@decks) do %>
+        <tr>
+         <td colspan="4" class="text-center bg-lighter px-4 py-2">
+          <%= if @current_user do%>
+            There's nothing here. Why not <%= link "create a deck", to: Routes.deck_path(@socket, :new), class: "text-secondary font-bold" %> yourself?</td>
+          <% else %>
+            There's nothing here. Why not <%= link "register", to: Routes.registration_path(@socket, :new), class: "text-secondary font-bold" %> and create a deck?
+          <% end %>
+        </td>
+        </tr>
+      <% else %>
+        <%= for {deck, i} <- Enum.with_index(@decks) do %>
+          <tr class=" <%= if rem(i, 2) == 0, do: "bg-light", else: "bg-lighter"  %>">
+            <td class="px-4 py-2"><%= link deck.title, to: Routes.deck_path(@socket, :show, deck), class: "text-primary-light font-bold" %></td>
+            <td class="px-4 py-2 text-center"><%= link deck.author_name, to: Routes.user_profile_path(@socket, :show, deck.author_name) %></td>
+            <td class="px-4 py-2 text-center"><%= deck.card_count %></td>
+            <td class="px-4 py-2 text-center">
+              <%= deck.category.name %>
+            </td>
+            <td class="px-4 py-2">
+                <%= if @current_user && @current_user.id != deck.user_id do %>
+                    <%= if FumoWeb.DeckView.user_is_subscribed(deck.id, @current_user.subscriptions) do %>
+                        <button class="btn-outline"
+                        phx-click="unsubscribe"
+                        phx-value-deck_id="<%= deck.id %>"
+                        phx-value-user_id="<%= @current_user.id%>">
+                        Unsubscribe</button>
+                    <% else %>
+                        <button class="btn-outline"
+                        phx-click="subscribe"
+                        phx-value-deck_id="<%= deck.id %>"
+                        phx-value-user_id="<%= @current_user.id%>">
+                        Subscribe</button>
+                    <% end %>
+                <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>

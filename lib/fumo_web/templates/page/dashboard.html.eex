@@ -52,7 +52,17 @@
             </table>
         <% end %>
     </div>
-    <footer class="p-4 text-right bg-lighter rounded-b-lg border border-light mt-12">
+    <footer class="p-4 text-right mt-4">
         <%= button("Create a new deck", to: Routes.deck_path(@conn, :new), method: :get, class: "btn") %>
     </footer>
+</section>
+<hr class="my-12 mx-auto"/>
+<section class="mx-auto mt-8 w-3/4">
+    <header class="p-4 text-center bg-lighter rounded-t-lg border border-light">
+        <h1 class="header">Subscribed Decks</h1>
+    </header>
+    <div>
+        <%= live_render(@conn, FumoWeb.DeckLive.List,
+        session: %{"decks" => @subscriptions, "current_user" => @current_user}) %>
+    </div>
 </section>

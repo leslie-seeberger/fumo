@@ -5,6 +5,7 @@ defmodule Fumo.Factory do
   alias Fumo.Accounts.User
   alias Fumo.Profiles.UserProfile
   alias Fumo.UserRegistration
+  alias Fumo.Subscriptions.DeckSubscription
 
   def user_factory() do
     %User{
@@ -27,7 +28,6 @@ defmodule Fumo.Factory do
     %UserProfile{
       username: Faker.Internet.user_name(),
       bio: Faker.Lorem.paragraph(),
-      # user: build(:user)
     }
   end
 
@@ -60,6 +60,13 @@ defmodule Fumo.Factory do
   def category_factory() do
     %Category{
       name: Faker.Lorem.word()
+    }
+  end
+
+  def deck_subscription_factory() do
+    %DeckSubscription{
+      user: build(:user),
+      deck: build(:deck)
     }
   end
 

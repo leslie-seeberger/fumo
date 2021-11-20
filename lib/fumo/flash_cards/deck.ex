@@ -15,6 +15,7 @@ defmodule Fumo.FlashCards.Deck do
     belongs_to :user, Fumo.Accounts.User
     belongs_to :category, Fumo.FlashCards.Category
     has_many :cards, Fumo.FlashCards.Card, on_delete: :delete_all
+    many_to_many :subscribers, Fumo.Accounts.User, join_through: Fumo.Subscriptions.DeckSubscription
 
     timestamps()
   end
@@ -24,6 +25,7 @@ defmodule Fumo.FlashCards.Deck do
     deck
     |> cast(attrs, [:title, :description, :is_published, :category_id])
     |> cast_assoc(:cards)
+    |> cast_assoc(:subscribers)
     |> validate_required([:title, :category_id])
     |> validate_length(:title, min: 3, max: 30)
     |> validate_publish()

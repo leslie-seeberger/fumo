@@ -1,7 +1,5 @@
 # Fumo
 
-## Table of Contents
-
 ## What is it?
 
 Fumo is a hub of flashcards. Create a deck to help reinforce your knowledge, subscribe to decks to learn something new.
@@ -13,6 +11,7 @@ To start your Phoenix server:
 - Install dependencies with `mix deps.get`
 - Create and migrate your database with `mix ecto.setup`
 - Install Node.js dependencies with `npm install` inside the `assets` directory
+- Seed the database by runnnning `mix run lib/priv/seeds.exs`
 - Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.

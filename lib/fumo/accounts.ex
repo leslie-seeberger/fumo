@@ -43,10 +43,9 @@ defmodule Fumo.Accounts do
     user =
       User
       |> with_username()
+      |> preload(:subscriptions)
       |> Repo.get_by(email: email)
 
-      # Repo.get_by(User, email: email)
-      # |> preload(:profile, )
     if User.valid_password?(user, password), do: user
   end
 
