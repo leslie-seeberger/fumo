@@ -2,8 +2,6 @@ defmodule Fumo.FlashCards.Deck do
   use Ecto.Schema
   import Ecto.Changeset
 
-  require IEx
-
   schema "decks" do
     field :description, :string
     field :is_published, :boolean, default: false
