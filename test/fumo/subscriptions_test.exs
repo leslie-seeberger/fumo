@@ -54,5 +54,13 @@ defmodule Fumo.SubscriptionsTest do
       deck_subscription = deck_subscription_fixture()
       assert %Ecto.Changeset{} = Subscriptions.change_deck_subscription(deck_subscription)
     end
+
+    @tag timeout: :infinity
+    test "list_user_subscriptions/1 returns an array of decks that the user is subscribed to" do
+      %{user: user, deck: deck} = insert(:deck_subscription)
+      deck = deck |> forget(:user) |> forget(:cards, :many)
+
+      assert [deck] == Subscriptions.list_user_subscriptions(user)
+    end
   end
 end

@@ -64,9 +64,13 @@ defmodule Fumo.Factory do
   end
 
   def deck_subscription_factory() do
+    deck = build(:deck)
+      |> with_author_name()
+      |> with_card_count()
+
     %DeckSubscription{
       user: build(:user),
-      deck: build(:deck)
+      deck: deck
     }
   end
 
